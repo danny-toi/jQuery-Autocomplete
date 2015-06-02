@@ -217,7 +217,7 @@
         onBlur: function () {
             this.enableKillerFn();
         },
-        
+
         abortAjax: function () {
             var that = this;
             if (that.currentRequest) {
@@ -324,9 +324,8 @@
                 }
             }
 
-            // -2px to account for suggestions border.
             if (that.options.width === 'auto') {
-                styles.width = (that.el.outerWidth() - 2) + 'px';
+                styles.width = that.el.outerWidth() + 'px';
             }
 
             $container.css(styles);
@@ -381,7 +380,7 @@
                 return;
             }
 
-            if (that.disabled || !that.visible) {
+            if ((that.disabled || !that.visible) && e.which != keys.RETURN) {
                 return;
             }
 
@@ -413,6 +412,12 @@
                 case keys.RETURN:
                     if (that.selectedIndex === -1) {
                         that.hide();
+                        if (that.currentValue) {
+                            var onSelectCallback = that.options.onSelect;
+                            if ($.isFunction(onSelectCallback)) {
+                                onSelectCallback.call(that.element, {value: that.currentValue, data: that.currentValue});
+                            }
+                        }
                         return;
                     }
                     that.select(that.selectedIndex);
